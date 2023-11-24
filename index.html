@@ -1,23 +1,367 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Teste</title>
-</head>
-<body>
-    <h1>Formulário de Teste</h1>
-    <form action="https://script.google.com/macros/s/AKfycby2dy4QfIwIN5M3st-yAKUAAzFDd7LcbhMYVadM-DgQjjjPxXGtHsIm1_9cqHwiXyqgHw/exec" method="POST">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required><br>
+<html lang="pt-br">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Formulário de Avaliação de IA Responsável</title>
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         margin: 20px;
+         }
+         h1, h2 {
+         text-align: center;
+         }
+         form {
+         max-width: 600px;
+         margin: 0 auto;
+         }
+         .section h2 {
+         color: #007BFF;
+         margin-bottom: 15px;
+         }
+         label {
+         display: block;
+         font-weight: bold;
+         margin-top: 10px;
+         }
+         select {
+         width: 100%;
+         margin-bottom: 10px;
+         }
+         input[type="submit"] {
+         display: block;
+         margin: 20px auto;
+         padding: 10px 20px;
+         background-color: #007BFF;
+         color: #fff;
+         border: none;
+         cursor: pointer;
+         }
+         .container {
+         max-width: 800px; /* Largura máxima para o contêiner */
+         margin: 0 auto; /* Centraliza o contêiner */
+         }
+         /* Estilos para os botões de navegação */
+         /* Estilos para os botões de navegação e envio */
+         .button-nav {
+         display: block;
+         margin: 20px auto;
+         padding: 10px 20px;
+         background-color: #007BFF; /* Azul */
+         color: #fff; /* Texto branco */
+         border: none;
+         cursor: pointer;
+         text-align: center;
+         border-radius: 0px; /* Bordas arredondadas */
+         font-weight: bold; /* Texto em negrito */
+         }
+         .button-nav:hover {
+         background-color: #0056b3; /* Azul um pouco mais escuro para o hover */
+         }
+         /* Estilo para botão de voltar */
+         .button-back {
+         display: block;
+         margin: 20px auto;
+         padding: 10px 20px;
+         background-color: #FF5733; /* Cor laranja */
+         color: #fff; /* Texto branco */
+         border: none;
+         cursor: pointer;
+         text-align: center;
+         border-radius: 0px;
+         font-weight: bold;
+         }
+         .button-back:hover {
+         background-color: #e74c3c; /* Laranja mais escuro no hover */
+         }
+         .section {
+         border: 1px solid #ddd;
+         padding: 20px;
+         margin-bottom: 20px;
+         border-radius: 10px;
+         min-height: 500px;
+         position: relative; /* Posição relativa para o contêiner da seção */
+         }
+         .button-container {
+         position: absolute; /* Posicionamento absoluto dentro da seção */
+         bottom: 20px; /* Mantém na parte inferior da seção */
+         left: 50%;
+         transform: translateX(-50%); /* Centraliza o contêiner na seção */
+         display: flex; /* Flexbox para alinhar os botões lado a lado */
+         gap: 10px; /* Espaçamento entre os botões */
+         }
+         .button-back, .button-nav {
+         flex: 1; /* Garante que os botões tenham tamanhos iguais */
+         padding: 15px 30px; /* Aumenta o padding para um tamanho maior */
+         min-width: 150px; /* Define uma largura mínima para cada botão */
+         white-space: nowrap; /* Impede que o texto do botão quebre em várias linhas */
+         overflow: hidden; /* Impede o transbordamento do texto */
+         text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
+         }
+         input[type="submit"] {
+         display: block;
+         margin: 20px auto;
+         padding: 10px 20px;
+         background-color: #007BFF; /* Azul */
+         color: #fff; /* Texto branco */
+         border: none;
+         cursor: pointer;
+         text-align: center;
+         border-radius: 0px;
+         font-weight: bold;
+         transition: background-color 0.3s ease;
+         }
+         input[type="submit"]:hover {
+         background-color: #0056b3; /* Azul mais escuro no hover */
+         }
+         /* Estilo para o botão de envio desabilitado */
+         input[type="submit"]:disabled {
+         background-color: #cccccc; /* Cor cinza claro */
+         color: #666666; /* Texto cinza escuro */
+         cursor: not-allowed; /* Cursor de não permitido */
+         }
+      </style>
+<script>
+    function showSection(sectionId) {
+        var containers = document.getElementsByClassName('container');
+        for (var i = 0; i < containers.length; i++) {
+            containers[i].style.display = 'none'; // Esconde todos os contêineres
+        }
+        var sectionContainer = document.querySelector('#' + sectionId).parentNode;
+        sectionContainer.style.display = 'block'; // Mostra o contêiner da seção específica
+    }
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
+    function checkIfAllAnswered() {
+        var allAnswered = true;
+        var selects = document.querySelectorAll('select');
 
-        <label for="mensagem">Mensagem:</label><br>
-        <textarea id="mensagem" name="mensagem" rows="4" cols="50" required></textarea><br>
+        selects.forEach(function(select) {
+            if (select.value === "") {
+                allAnswered = false;
+            }
+        });
 
-        <input type="submit" value="Enviar">
-    </form>
-</body>
+        var submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = !allAnswered;
+    }
+
+    window.onload = function() {
+        showSection('transparencia'); // Mostra apenas a seção Transparência inicialmente
+        checkIfAllAnswered(); // Verifica o estado inicial do botão de envio
+
+        // Adiciona um ouvinte de eventos para cada seleção de resposta
+        document.querySelectorAll('select').forEach(function(select) {
+            select.addEventListener('change', checkIfAllAnswered);
+        });
+    };
+</script>
+
+   </head>
+   <body>
+      <h1>Formulário de Avaliação de IA Responsável</h1>
+      <form action="https://script.google.com/macros/s/AKfycbwqdkrxY5Q0eVg_Ke3QWZjp0ZXGkpFtGhuV8LjaKX9oDy-qvq9BnBLCQOpqd82A-3XhWw/exec" method="POST">
+         <!-- Seção de Transparência -->
+         <div class="container">
+            <div id="transparencia" class="section">
+               <h2>Transparência</h2>
+               <label for="pergunta1">1. O sistema de IA fornece documentação detalhada sobre seu funcionamento e processos decisórios?</label>
+               <select id="pergunta1" name="pergunta1" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta2">2. As informações sobre o sistema são facilmente acessíveis e compreensíveis para os usuários?</label>
+               <select id="pergunta2" name="pergunta2" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta3">3. O sistema facilita o acesso a informações relevantes para seus usuários?</label>
+               <select id="pergunta3" name="pergunta3" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta4">4. As políticas de transparência do sistema estão claramente definidas?</label>
+               <select id="pergunta4" name="pergunta4" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta5">5. Existe uma explicação clara sobre as limitações e incertezas do sistema?</label>
+               <select id="pergunta5" name="pergunta5" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-nav" onclick="showSection('justica')">Próximo</button>
+               </div>
+            </div>
+         </div>
+         <!-- Seção de Justiça -->
+         <div class="container" style="display:none;">
+            <div id="justica" class="section">
+               <h2>Justiça</h2>
+               <label for="pergunta6">6. O sistema de IA evita vieses em relação aos dados utilizados para treinamento e nas decisões que ele toma?</label>
+               <select id="pergunta6" name="pergunta6" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta7">7. Medidas são implementadas para garantir a equidade e imparcialidade do sistema?</label>
+               <select id="pergunta7" name="pergunta7" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta8">8. Existe um procedimento para lidar com reclamações ou preocupações relacionadas a vieses e injustiças?</label>
+               <select id="pergunta8" name="pergunta8" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-back" onclick="showSection('transparencia')">Voltar</button>
+                  <button type="button" class="button-nav" onclick="showSection('responsabilidade')">Próximo</button>
+               </div>
+            </div>
+         </div>
+         <!-- Seção de Responsabilidade -->
+         <div class="container" style="display:none;">
+            <div id="responsabilidade" class="section">
+               <h2>Responsabilidade</h2>
+               <!-- Adicionando as perguntas da seção Responsabilidade -->
+               <label for="pergunta9">9. Há uma atribuição clara de responsabilidades entre desenvolvedores, operadores e outros stakeholders pelo sistema de IA?</label>
+               <select id="pergunta9" name="pergunta9" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta10">10. O sistema assegura a accountability em todas as etapas?</label>
+               <select id="pergunta10" name="pergunta10" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta11">11. Existe um protocolo claro para ação corretiva em caso de falhas ou danos causados pelo sistema?</label>
+               <select id="pergunta11" name="pergunta11" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta12">12. Os usuários têm canais acessíveis para relatar problemas ou preocupações relacionados ao sistema?</label>
+               <select id="pergunta12" name="pergunta12" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-back" onclick="showSection('justica')">Voltar</button>
+                  <button type="button" class="button-nav" onclick="showSection('seguranca_privacidade')">Próximo</button>
+               </div>
+            </div>
+         </div>
+         <!-- Seção de Segurança e Privacidade -->
+         <div class="container" style="display:none;">
+            <div id="seguranca_privacidade" class="section">
+               <h2>Segurança e Privacidade</h2>
+               <label for="pergunta13">13. O sistema implementa medidas eficazes para proteger os dados dos usuários contra acessos não autorizados e outras ameaças cibernéticas?</label>
+               <select id="pergunta13" name="pergunta13" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta14">14. O sistema está em conformidade com normas de segurança de dados e privacidade?</label>
+               <select id="pergunta14" name="pergunta14" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta15">15. Há políticas claras sobre o armazenamento e manuseio de dados sensíveis?</label>
+               <select id="pergunta15" name="pergunta15" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta16">16. Gestão de Consentimento de Dados: O sistema gerencia adequadamente o consentimento dos usuários em relação ao uso de seus dados, conforme exigido pelas regulamentações de privacidade?</label>
+               <select id="pergunta16" name="pergunta16" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-back" onclick="showSection('responsabilidade')">Voltar</button>
+                  <button type="button" class="button-nav" onclick="showSection('beneficio_social')">Próximo</button>
+               </div>
+            </div>
+         </div>
+         <!-- Seção de Benefício Social -->
+         <div class="container" style="display:none;">
+            <div id="beneficio_social" class="section">
+               <h2>Benefício Social</h2>
+               <label for="pergunta17">17. O sistema de IA contribui para o bem-estar social e humano?</label>
+               <select id="pergunta17" name="pergunta17" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta18">18. O sistema considera o impacto em termos de acessibilidade, inclusão e benefícios gerais para a sociedade?</label>
+               <select id="pergunta18" name="pergunta18" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-back" onclick="showSection('seguranca_privacidade')">Voltar</button>
+                  <button type="button" class="button-nav" onclick="showSection('conformidade_regulatoria')">Próximo</button>
+               </div>
+            </div>
+         </div>
+         <!-- Seção de Conformidade Regulatória -->
+         <div class="container" style="display:none;">
+            <div id="conformidade_regulatoria" class="section">
+               <h2>Conformidade Regulatória</h2>
+               <label for="pergunta19">19. O sistema de IA está em conformidade com as leis e normas vigentes, incluindo regulamentos locais e internacionais?</label>
+               <select id="pergunta19" name="pergunta19" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <label for="pergunta20">20. Treinamento em Conformidade: Os operadores e desenvolvedores do sistema recebem treinamento regular em conformidade regulatória?</label>
+               <select id="pergunta20" name="pergunta20" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="Verdadeiro">Verdadeiro</option>
+                  <option value="Parcialmente Verdadeiro">Parcialmente Verdadeiro</option>
+                  <option value="Falso">Falso</option>
+               </select>
+               <div class="button-container">
+                  <button type="button" class="button-back" onclick="showSection('beneficio_social')">Voltar</button>
+               </div>
+            </div>
+         </div>
+         <!-- Botão de Envio desabilitado inicialmente -->
+         <input type="submit" value="Enviar Respostas" id="submit-btn" disabled>
+      </form>
+   </body>
 </html>
